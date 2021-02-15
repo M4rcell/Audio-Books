@@ -20,3 +20,11 @@ abrir en su navegador [http://localhost:3000](http://localhost:3000)
 - react-router-dom : manejardor de rutas => npm install react-router-dom .
 - validator        : para validar input =>  npm install validator
 - Modal            : para ingresar datos => npm i react-modal      
+
+## DEMO
+
+
+<div align="center"> 
+     <img width="45%"  src="https://github.com/M4rcell/Angular-Spotify-app/blob/main/src/assets/demo/home.png" alt="About screen" title="About screen"</img> 
+     <img width="45%"  src="https://github.com/M4rcell/Audio-Books/blob/main/assets/audio-books2.png" alt="List screen" title="List screen"></img> 
+</div> 
