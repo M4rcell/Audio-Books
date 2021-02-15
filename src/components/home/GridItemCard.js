@@ -22,9 +22,9 @@ export default function GridItemCard({title,is_original,street_date,cost_per_pla
                     <h3>{title['es-MX']}</h3>                                
                 </div>
                 <div className="item-card-info">
-                  <p>Autor     {authors['es-MX']}</p>
+                  <p>Autor:     {authors['es-MX']}</p>
                   
-                  <p>Narracion de  {narrators['es-MX']} </p>
+                  <p>Narracion de : {narrators['es-MX']} </p>
                   <p>  {street_date['es-MX']} </p>
                 </div>
                 <div className="card-actions">

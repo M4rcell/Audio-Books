@@ -52,14 +52,21 @@ export default function DataTable({data,loading}) {
   var subtitle;
   const [modalIsOpen,setIsOpen] = React.useState(false);
   const [modalIsOpenDelete,setIsOpenDelete] = React.useState(false);
-  var code ='';
+
   function openModal(item) {
     setIsOpen(true);
-    /* const {name, value}=item;
-    handleInputAddChange(prevState=>({
-      ...prevState,
-      [name]: value
-    })); */
+
+    handInputEditChange({
+    id            : item.sys.id,
+    title         : item.fields.title['es-MX'] ,
+    is_original   :'' ,     // item.fields.is_original['es-MX']
+    street_date   : item.fields.street_date['es-MX'] ,     
+    cost_per_play : item.fields.cost_per_play['es-MX'] ,       
+    authors       : item.fields.authors['es-MX'] , 
+    narrators     : item.fields.narrators['es-MX'] ,   
+    duration      : item.fields.duration['es-MX'] ,  
+    cover         : item.fields.cover['es-MX'] ,
+    });
    
   }
  
@@ -87,10 +94,11 @@ export default function DataTable({data,loading}) {
       loading:true    
     });
    
-  const [ formAddValues, handleInputAddChange ] = useForm({        
+  const [ formEditValues, handInputEditChange ] = useState({ 
+    id            :'',
     title         :'',
     is_original   :'',     
-    street_date   :new Date(),     
+    street_date   :'',     
     cost_per_play :'',       
     authors       :'', 
     narrators     :'',   
@@ -98,11 +106,12 @@ export default function DataTable({data,loading}) {
     cover         :'',
   } );
 
- const {title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover} = formAddValues;
+  console.log('formEditValues : ',formEditValues)
+  const {id ,title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover} = formEditValues;
    
   
   useEffect (()=>{
-
+    
     getAudioBooks()
       .then(data =>{
           setTimeout(()=>{
@@ -116,29 +125,30 @@ export default function DataTable({data,loading}) {
          
       });
 
-  },[formAddValues]); 
+  },[]); 
 
   const handleSubmitForm=(e)=>{
 
     e.preventDefault();
-    console.log(title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover);
-
+    console.log(id,title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover);
+     
    var original;
-
    if (isFormValid()) {
     
     if (is_original==='nuevo') {
         original=true;
-        updateAudioBook(code ,title ,original,street_date,parseInt(cost_per_play), authors, narrators,parseInt(duration),cover).then( res =>{
+        updateAudioBook(id ,title ,original,street_date,parseInt(cost_per_play), authors, narrators,parseInt(duration),cover).then( res =>{
           console.log('respuesta de Guardado : ', res);
         });
         closeModal();
-        
+        resetForm();
     }
     if (is_original==='conocido') {
         original=false;
-        updateAudioBook(code ,title ,original,street_date,parseInt(cost_per_play), authors, narrators,parseInt(duration),cover).then( res =>{
+        updateAudioBook(id ,title ,original,street_date,parseInt(cost_per_play), authors, narrators,parseInt(duration),cover).then( res =>{
         console.log('respuesta de Guardado : ', res);
+
+        resetForm();
       });
       
       closeModal();
@@ -160,7 +170,20 @@ export default function DataTable({data,loading}) {
    return true;
 
   }
-
+  
+  const resetForm=() => {
+    handInputEditChange({ 
+      id            :'',
+      title         :'',
+      is_original   :'',     
+      street_date   :'',     
+      cost_per_play :'',       
+      authors       :'', 
+      narrators     :'',   
+      duration      :'',  
+      cover         :'',
+    })
+  }
 
 
   //Table
@@ -212,6 +235,7 @@ export default function DataTable({data,loading}) {
     console.log('item : ',item )
   }
 
+  const handleOnChange = (userKey, value) => handInputEditChange({ ...formEditValues, [userKey]: value })
 
   return (
         <>
@@ -220,15 +244,15 @@ export default function DataTable({data,loading}) {
             <Table className={classes.table} aria-label="custom pagination table">
             <TableHead>
                 <TableRow>
-                    <TableCell align="right">title</TableCell>
-                    <TableCell align="right">is_original</TableCell>
-                    <TableCell align="right">street_date</TableCell>
-                    <TableCell align="right">cost_per_play</TableCell>
-                    <TableCell align="right">authors</TableCell>
-                    <TableCell align="right">narrators</TableCell>
-                    <TableCell align="right">duration</TableCell>
-                    <TableCell align="right">cover</TableCell>
-                    <TableCell align="right">actions</TableCell>
+                    <TableCell align="center">Titulo</TableCell>
+                    <TableCell align="right">Original</TableCell>
+                    <TableCell align="right">Fecha </TableCell>
+                    <TableCell align="right">Costo</TableCell>
+                    <TableCell align="right">Autores</TableCell>
+                    <TableCell align="right">Narradores</TableCell>
+                    <TableCell align="right">Duraccion</TableCell>
+                    <TableCell align="right">Imagen</TableCell>
+                    <TableCell align="right">Acciones</TableCell>
                 </TableRow>
                 </TableHead>
                 
@@ -253,7 +277,7 @@ export default function DataTable({data,loading}) {
                           {item.fields.street_date["es-MX"]}
                         </TableCell>
                         <TableCell style={{ width: 160 }} align="right">
-                          {item.fields.cost_per_play["es-MX"]}
+                         $ {item.fields.cost_per_play["es-MX"]}
                         </TableCell>
                         <TableCell style={{ width: 160 }} align="right">
                            {item.fields.authors["es-MX"]}
@@ -262,7 +286,7 @@ export default function DataTable({data,loading}) {
                            {item.fields.narrators["es-MX"]} 
                         </TableCell>
                         <TableCell style={{ width: 160 }} align="right">
-                           {item.fields.duration["es-MX"]} 
+                           {item.fields.duration["es-MX"]} min
                         </TableCell>
                         <TableCell style={{ width: 160 }} align="right">
                            
@@ -338,94 +362,51 @@ export default function DataTable({data,loading}) {
 
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                <TextField name="title" label="title" type="text" variant="outlined" autoComplete="off" fullWidth
-                value={title}  onChange={handleInputAddChange}
+                <TextField name="title" label="titulo" type="text" variant="outlined" autoComplete="off" fullWidth
+                value={title}  onChange={(e) => handleOnChange('title', e.target.value)}
                 />
                 <br/> <br/> 
             
-                <TextField name="street_date" variant="outlined" id="date" label="street_date" type="date" defaultValue="2017-05-24" fullWidth
-                value={street_date}  onChange={handleInputAddChange}
+                <TextField name="street_date" variant="outlined" id="date" label="Fecha" type="date" defaultValue="2017-05-24" fullWidth
+                value={street_date}  onChange={(e) => handleOnChange('street_date', e.target.value)}
                   InputLabelProps={{
                     shrink: true,
                   }}
                 />
                 <br/> <br/> 
-                <TextField name="cost_per_play" label="cost_per_play" type="number" variant="outlined" autoComplete="off" fullWidth
-                value={cost_per_play}  onChange={handleInputAddChange}
+                <TextField name="cost_per_play" label="costo" type="number" variant="outlined" autoComplete="off" fullWidth
+                value={cost_per_play}  onChange={(e) => handleOnChange('cost_per_play', e.target.value)}
                 />
                 <br/> <br/> 
-                <TextField name="authors" label="authors" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={authors}  onChange={handleInputAddChange}
+                <TextField name="authors" label="autores" type="text" variant="outlined" autoComplete="off" fullWidth
+                  value={authors}  onChange={(e) => handleOnChange('authors', e.target.value)}
                   />
                   <br/> <br/>
                 </Grid>
                 <Grid item xs={12} sm={6}>                 
                   
-                  <TextField name="narrators" label="narrators" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={ narrators}  onChange={handleInputAddChange}
+                  <TextField name="narrators" label="narradores" type="text" variant="outlined" autoComplete="off" fullWidth
+                  value={ narrators}  onChange={(e) => handleOnChange('narrators', e.target.value)}
                   />
                   <br/> <br/> 
-                  <TextField name="duration" label="duration" type="number" variant="outlined"  autoComplete="off" fullWidth
-                  value={duration }  onChange={handleInputAddChange}
+                  <TextField name="duration" label="duracion" type="number" variant="outlined"  autoComplete="off" fullWidth
+                  value={duration }  onChange={(e) => handleOnChange('duration', e.target.value)}
                   />
                   <br/> <br/> 
-                  <TextField name="cover" label="cover" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={cover}  onChange={handleInputAddChange}
+                  <TextField name="cover" label="imagen" type="text" variant="outlined" autoComplete="off" fullWidth
+                  value={cover}  onChange={(e) => handleOnChange('cover', e.target.value)}
                   />  
                   <br/> <br/> 
+                  {/* <input name="id" value={id}/> */}
                               
-                  <RadioGroup aria-label="gender" name="is_original"  value={is_original} onChange={handleInputAddChange}  >
+                  <RadioGroup aria-label="gender" name="is_original"  value={is_original} onChange={(e) => handleOnChange('is_original', e.target.value)}  >
                     <FormControlLabel style={{display:'flex'}} value="nuevo" control={<Radio />} label="Nuevo" />
                     <FormControlLabel style={{display:'flex'}} value="conocido" control={<Radio />} label="Conocido" />
                   </RadioGroup>
               </Grid>
 
               </Grid>
-              {/* <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                <TextField name="title" label="title" type="text" variant="outlined" autoComplete="off" fullWidth
-                value={&ields.title['es-MX']}  onChange={handleInputAddChange}
-                />
-                <br/> <br/> 
-            
-                <TextField name="street_date" variant="outlined" id="date" label="street_date" type="date" defaultValue="2017-05-24" fullWidth
-                value={street_date&&fields.street_date['es-MX']}  onChange={handleInputAddChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <br/> <br/> 
-                <TextField name="cost_per_play" label="cost_per_play" type="number" variant="outlined" autoComplete="off" fullWidth
-                value={cost_per_play&&fields.cost_per_play['es-MX']}  onChange={handleInputAddChange}
-                />
-                <br/> <br/> 
-                <TextField name="authors" label="authors" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={authors&&fields.authors['es-MX']}  onChange={handleInputAddChange}
-                  />
-                  <br/> <br/>
-                </Grid>
-                <Grid item xs={12} sm={6}>                 
-                  
-                  <TextField name="narrators" label="narrators" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={narrators&&fields.narrators['es-MX'] }  onChange={handleInputAddChange}
-                  />
-                  <br/> <br/> 
-                  <TextField name="duration" label="duration" type="number" variant="outlined"  autoComplete="off" fullWidth
-                  value={duration&&fields.duration['es-MX'] }  onChange={handleInputAddChange}
-                  />
-                  <br/> <br/> 
-                  <TextField name="cover" label="cover" type="text" variant="outlined" autoComplete="off" fullWidth
-                  value={cover&&fields.cover['es-MX']}  onChange={handleInputAddChange}
-                  />  
-                  <br/> <br/> 
-                              
-                  <RadioGroup aria-label="gender" name="is_original"  value={is_original} onChange={handleInputAddChange}  >
-                    <FormControlLabel style={{display:'flex'}} value="nuevo" control={<Radio />} label="Nuevo" />
-                    <FormControlLabel style={{display:'flex'}} value="conocido" control={<Radio />} label="Conocido" />
-                  </RadioGroup>
-              </Grid>
-
-              </Grid> */}
+              
               <br/> <br/> 
               <div className="container-btn">        
                 <Button onClick={closeModal} color="primary">
