@@ -1,82 +1,87 @@
 //rafcp
+import React, { useEffect, useState } from 'react'
+import GridCards from './GridCards';
+import { searchAudioBooks } from '../../services/getAudioBooks';
+import SearchSVG from '../../icons/components/search';
+import './style.scss'
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import { useFechAudioBooks } from '../../hooks/useFechAudioBooks';
-import { createAudioBooks, searchAudioBooks, updateAudioBook ,deleteAudioBook, getSingleAudioBook} from '../../services/getAudioBooks';
+const Home = ({}) => {
 
-const Home = props => {
+    const [inputvalue, setinputValue] = useState('');
 
-    const {data:data,loading} = useFechAudioBooks();
-
-    console.log('respuesta data : ',data);
+    const [result, setresult] = useState({
+        data:[],
+        loading:true    
+    });
     
-    const handleclickButton = () => {
-        createAudioBooks().then( res =>{
-            console.log('respuesta de Guardado : ', res);
+    useEffect (()=>{
+
+        searchAudioBooks(inputvalue)
+        .then(data =>{
+            setTimeout(()=>{
+                
+                setresult({
+                    data:data.items,
+                    loading:false
+                });
+
+            },1000);
+           
         });
-    }
-    
-    const seachAudioBook = ()=>{
-        const name = "Elon Musk";
-        searchAudioBooks(name).then( res =>{
-            console.log('Search : ', res);
-        });
-    }
 
+    },[inputvalue]);
     
-    const deleteAudioBooks = ()=>{
-        const id="7jWYqV3H1PieAYlXE9SyS1"; 
-        deleteAudioBook(id).then( res =>{
-            console.log('delete : ', res);
-            const data =  res.json();
-            console.log('data json: ',data )
-        });
-    }
 
-    
-    const updateAudioBooks = ()=>{
-        const code = "16mDxMs6EOLagfR3X0cxo7";
-        updateAudioBook(code).then( res =>{
-            console.log('update : ', res);
-        });
+    const handleInputChange=(e)=>{
+        setinputValue(e.target.value);
     }
-    const getSingleAudioBooks = ()=>{
-        const code = "16mDxMs6EOLagfR3X0cxo7";
-        getSingleAudioBook(code).then( res =>{
-            console.log('get single aoudio book : ', res);
-        });
+   
+
+    const handleSubmit=(e)=>{
+
+        e.preventDefault();  
+
+        if (inputvalue.trim().length > 2) {
+            
+            searchAudioBooks(inputvalue).then( res =>{
+                if (res.items.length>=1) {
+                    console.log('hay datos') 
+                }
+                else{
+                    console.log('no hay datos')
+                }
+            });
+            
+        }
+
     }
-    
-    
-    /* console.log('del : ')
-    deleteAudioBook(id); */
     return (
         <>
-        <div>
-            <h1> Estas en Home </h1>
+        <div className="serarch-container">
+            <form
+                onSubmit={handleSubmit}
+                className="search"
+                >
+                <input className="search-input"
+                    placeholder="Busca tu podcast favorito"
+                    type="text"
+                    name="search"
+                    onChange={handleInputChange}
+                    value={inputvalue}
+                />
+                <span className="search-icon">
+                    <SearchSVG  size={35} color="#6f737c"/>
+                </span>
+            </form>
         </div>
-
-        <button onClick={handleclickButton}>
-            Guardar
-        </button>
-        <button style={{margin:20}} onClick={seachAudioBook}>
-            Search
-        </button>
-        <button style={{margin:20}} onClick={deleteAudioBooks}>
-            Delete
-        </button>
-        <button style={{margin:20}} onClick={updateAudioBooks}>
-            Update
-        </button>
-        <button style={{margin:20}} onClick={getSingleAudioBooks}>
-            Get single audio book
-        </button>
-
+         
+         <GridCards data={result}/>
         </>
     )
 }
 
+Home.propTypes = {
 
+}
 
 export default Home

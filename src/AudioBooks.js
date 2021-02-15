@@ -1,23 +1,16 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import Home from './components/home/Home'
-import { getAudioBooks } from './services/getAudioBooks'
+import { AppRouter } from './routes/AppRouter'
+
 
 const AudioBooks = props => {
     
-    
+
     return (
-        <>
-        <Home/>
-        <div>
-         
-        </div>
-       </>
+        <>      
+          <AppRouter/>
+
+        </>
     )
-}
-
-AudioBooks.propTypes = {
-
 }
 
 export default AudioBooks

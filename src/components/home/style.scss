@@ -1,0 +1,112 @@
+.serarch-container{
+margin-left: 30vw;
+}
+.search {
+    max-width: 500px;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    position: relative;
+    align-items: center;
+    text-align: center;
+  }
+ 
+  .search-input {
+    background: #f2f2f2;
+    height: 50px;
+    padding: 10px;
+    font-size: 18px;
+    font-family: Arial;
+    width: 100%;
+    border-radius: 10px;
+    border:none;
+    outline: 0;
+    box-shadow: 2px 2px 5px rgba(0,0,0,.2);
+  }
+ 
+  .search-input:focus {
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+  }
+ 
+ 
+  .search-icon {
+    position: absolute;
+    right: -15px;
+    top: 10px;
+    right: 10px;
+  }
+
+  //Cards
+  .container-card{
+    display: inline-flex;
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    grid-template-columns: 1fr 1fr 1fr 1fr ; 
+    padding: 10px; 
+  }
+
+  .card{
+    position:relative;
+    width:280px;
+    border-radius:5px 5px 0 0;
+    box-shadow:0 5px 50px -5px rgba(0, 0, 0,0.4);
+  }
+  
+  .card_list{border-radius:5px 5px 0 0;
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:220px;
+    width:100%;
+    background:linear-gradient(-65deg, #6e4593 10%,#655098 25%,#00c4cc);
+  }
+  .card_item{
+    display:block;
+    position:absolute;
+    height:130px;
+    width:150px;
+    transition:0.4s;
+  }
+  .card_item:active{
+    opacity:0;
+    margin-top:20px;
+    transform:rotateZ(-45deg);
+  }
+
+  .card_info{
+    display:flex;
+    flex-direction:column;
+    text-align:center;
+    justify-content:center;
+    height:auto;
+    width:100%;
+    font-size:0.9rem;
+    color:#555a61;
+    background-color:white;
+    margin-bottom: 0px;
+    
+  }
+  .card_info h1{
+    margin-top:0px;
+    font-size:1.2rem;
+    color:#b9bcc0;
+    text-shadow:0px -2px 0 #607D8B, 0 0 5px #CFD8DC;
+  }
+  .card-actions{
+    position: relative;
+    right: 10px;
+  }
+  .item-card-info{
+    margin: 15px;
+    margin-top: 0px;
+  }
+  //#AEEA00
+  .btn-card{
+    color: #6e4593;
+  }
+  .btn-card:hover{
+    color: #7e0ce2;
+  }
+  .duration{
+    margin-left: 70px;
+  }

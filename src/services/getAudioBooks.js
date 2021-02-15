@@ -1,15 +1,4 @@
 
-/* 
-Y estas serían tus credenciales para poder realizar tu prueba
-
-API_TOKEN:          CFPAT-LBtveUvtDi7YjAhsyNzZURthngcrVnIr53eOZjYnxuc 
-SPACE_ID:           1t4hjzo7y0kb
-ENVIRONMENT:        master
-CONTENT_TYPE_ID:    audiocontent-v5 
-
-{BASE_URL}/spaces/{SPACE_ID}/environments/{ENVIRONMENT}/entries?select=fields,sys.id,sys.version&locale=es-MX
-
-*/
     const API_TOKEN  =        'CFPAT-LBtveUvtDi7YjAhsyNzZURthngcrVnIr53eOZjYnxuc';
     const SPACE_ID   =        '1t4hjzo7y0kb';
     const ENVIRONMENT=        'master';
@@ -19,7 +8,6 @@ CONTENT_TYPE_ID:    audiocontent-v5
 export const getAudioBooks= async()=>{    
 
     const url =`${BASE_URL}/spaces/${SPACE_ID}/environments/${ENVIRONMENT}/entries?select=fields,sys.id,sys.version&locale=es-MX&content_type=${CONTENT_TYPE_ID}`;
-    //encodeURI renplaza los espacios  en dolares
             
      const resp = await fetch (url,{
          method:"GET",
@@ -27,32 +15,14 @@ export const getAudioBooks= async()=>{
              Authorization: `Bearer ${API_TOKEN}`
          }
         });
-    console.log('resp : ',resp);
 
      const data = await resp.json();
-
-     console.log('Data API : ' ,data);
-     
-    /*  const gifs = data.map(img =>{//para traer lo que quieras de un API
-         return{
-             id: img.id,
-             title:img.title,
-             url:img.images?.downsized_medium.url
-         }
-     })
-
-     console.log(gifs);
-
-    return  gifs; */
-    //setimage(gifs);// lo asignas al arreglo de hook image
-
-    return data;
+      return data;
     }
 
 export const getSingleAudioBook= async(id)=>{    
   
     const url =`${BASE_URL}/spaces/${SPACE_ID}/environments/${ENVIRONMENT}/entries?sys.id=${id}&select=fields,sys.id,sys.version&locale=es-MX`;
-    //encodeURI renplaza los espacios  en dolares
             
      const resp = await fetch (url,{
          method:"GET",
@@ -69,38 +39,34 @@ export const getSingleAudioBook= async(id)=>{
     return data;
     }
 
-    export const createAudioBooks= async()=>{ 
+    export const createAudioBooks= async(title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover)=>{ 
 
         const url =`${BASE_URL}/spaces/${SPACE_ID}/environments/${ENVIRONMENT}/entries`;
     //encodeURI renplaza los espacios  en dolares
      const newdata ={                   
                     "title": {
-                        "es-MX": "Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future"
+                        "es-MX": `${title}`
                     },
                     "is_original": {
-                        "es-MX": false
+                        "es-MX": is_original
                     },
                     "street_date": {
-                        "es-MX": "2020-12-25T00:00-06:00"
+                        "es-MX": `${street_date}`
                     },
                     "cost_per_play": {
-                        "es-MX": 90
+                        "es-MX": cost_per_play
                     },
                     "authors": {
-                        "es-MX": [
-                        "Ashlee Vance"
-                        ]
+                        "es-MX":[`${authors}`]
                     },
                     "narrators": {
-                        "es-MX": [
-                        "Fred Sanders"
-                        ]
+                        "es-MX": [`${narrators}`]
                     },
                     "duration": {
-                        "es-MX": 589632
+                        "es-MX": duration
                     },
                     "cover": {
-                        "es-MX": "https://images.findawayworld.com/v1/image/cover/CD059097"
+                        "es-MX": `${cover}`
                     }                    
                 };
 
@@ -113,6 +79,8 @@ export const getSingleAudioBook= async(id)=>{
          //body:JSON.stringify({fields:newdata})
          body:JSON.stringify({fields:newdata})
         });
+
+        getAudioBooks();
 
         return resp.json();
         //const body = await resp.json();
@@ -148,47 +116,40 @@ export const getSingleAudioBook= async(id)=>{
                 Authorization: `Bearer ${API_TOKEN}`
             }
         });
-       /*  console.log('resp: ',resp )
-        const data = await resp.json();
-        console.log('data: ',data ) */
         
         return resp;
     }
 
-    export const updateAudioBook= async(id)=>{ 
+    export const updateAudioBook= async(id ,title ,is_original,street_date,cost_per_play, authors, narrators,duration,cover)=>{ 
 
         const url =`${BASE_URL}/spaces/${SPACE_ID}/environments/${ENVIRONMENT}/entries/${id}`;
 
-        const newdata = {
-            "title": {
-                "es-MX": "Elon Musk"
-            },
-            "is_original": {
-                "es-MX": false
-            },
-            "street_date": {
-                "es-MX": "2020-12-25T00:00-06:00"
-            },
-            "cost_per_play": {
-                "es-MX": 90
-            },
-            "authors": {
-                "es-MX": [
-                    "Ashlee Vance"
-                ]
-            },
-            "narrators": {
-                "es-MX": [
-                    "Fred Sanders"
-                ]
-            },
-            "duration": {
-                "es-MX": 589632
-            },
-            "cover": {
-                "es-MX": "https://images.findawayworld.com/v1/image/cover/CD059097"
-            }            
-        };
+        const newdata ={                   
+                    "title": {
+                        "es-MX": `${title}`
+                    },
+                    "is_original": {
+                        "es-MX": is_original
+                    },
+                    "street_date": {
+                        "es-MX": `${street_date}`
+                    },
+                    "cost_per_play": {
+                        "es-MX": cost_per_play
+                    },
+                    "authors": {
+                        "es-MX":[`${authors}`]
+                    },
+                    "narrators": {
+                        "es-MX": [`${narrators}`]
+                    },
+                    "duration": {
+                        "es-MX": duration
+                    },
+                    "cover": {
+                        "es-MX": `${cover}`
+                    }                    
+                };
 
         const resp = await fetch (url,{
         method:"PUT",
@@ -198,7 +159,6 @@ export const getSingleAudioBook= async(id)=>{
             'X-Contentful-Version': 1,
             
         },
-        //body:JSON.stringify({fields:newdata})
         body:JSON.stringify({fields:newdata})
         });
         
@@ -208,28 +168,6 @@ export const getSingleAudioBook= async(id)=>{
         
         return resp;
     }
-
-/* 
-export const getAudioBooksss= async()=>{
-
-    const url =`https://api.giphy.com/v1/gifs/search?q=${encodeURI(category)}&limit=10&api_key=FwxBmIpYZo2fp4kc7WGTBDh2KlaYYgWi`;//encodeURI renplaza los espacios  en dolares
-            
-     const resp = await fetch (url);
-     const {data} = await resp.json();
-     
-     const gifs = data.map(img =>{//para traer lo que quieras de un API
-         return{
-             id: img.id,
-             title:img.title,
-             url:img.images?.downsized_medium.url
-         }
-     })
-
-     console.log(gifs);
-
-    return  gifs;
-    //setimage(gifs);// lo asignas al arreglo de hook image
-    } */
 
 
     
